@@ -9,12 +9,15 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    role = Column(String)
     user_data = relationship("PersonalInformation", back_populates="user")
 
 
 class PersonalInformation(Base):
     __tablename__ = "personal_information"
     id = Column(Integer, primary_key=True, index=True)
+    name=Column(String, Index=True)
+    lastname=Column(String, Index=True)
     weight = Column(Float, index=True)
     height = Column(Float, index=True)
     age = Column(Integer, index=True)

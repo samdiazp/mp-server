@@ -8,6 +8,8 @@ class PersonalInformationBase(BaseModel):
     age: int
     allergies: str
     pathologies: str
+    name: str
+    lastname:str
 
 
 class PersonalInformationCreate(PersonalInformationBase):
@@ -31,3 +33,6 @@ class User(UserBase):
 
     class Config:
         orm_mode=True
+
+class UserCreate(UserBase):
+    password: str
