@@ -12,7 +12,7 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from app.database import get_db, SessionLocal
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 day
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days
 ALGORITHM = "HS256"
 JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret')     # should be kept secret
@@ -67,13 +67,13 @@ async def get_me(token: str = Depends(reuseable_oauth), db: SessionLocal = Depen
         if datetime.fromtimestamp(token_payload.exp) < datetime.now():
             raise HTTPException(
                 status_code = status.HTTP_401_UNAUTHORIZED,
-                detail="Token expired",
+                detail="Token expirado",
                 headers={"WWW-Authenticate": "Bearer"},
             )
     except(jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
+            detail="No se pudo validar las credenciales",
             headers={"WWW-Authenticate": "Bearer"},
         )
         
@@ -83,9 +83,9 @@ async def get_me(token: str = Depends(reuseable_oauth), db: SessionLocal = Depen
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Could not find user",
+            detail="Usuario no existe",
         )
     
-    return UserSCH(**user.as_dict()).dict()
+    return UserSCH(**user.as_dict())
 
     

@@ -16,11 +16,11 @@ class User(Base, BaseModel):
 class PersonalInformation(Base, BaseModel):
     __tablename__ = "personal_information"
     id = Column(Integer, primary_key=True, index=True)
-    name=Column(String, index=True)
-    lastname=Column(String, index=True)
-    weight = Column(Float, index=True)
-    height = Column(Float, index=True)
-    age = Column(Integer, index=True)
+    name=Column(String)
+    lastname=Column(String)
+    weight = Column(Float)
+    height = Column(Float)
+    age = Column(Integer)
     allergies = Column(String)
     pathologies = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)

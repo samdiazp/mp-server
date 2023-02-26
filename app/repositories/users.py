@@ -9,3 +9,9 @@ class UserRepo(BaseRepo):
 
     def get_by_email(self, email: str) -> User:
         return self.db.query(self.model).filter(User.email == email).first()
+
+
+class PersonalInfoRepo(BaseRepo):
+    def __init__(self, db: Session) -> None:
+        super().__init__(db, PersonalInformation)
+    

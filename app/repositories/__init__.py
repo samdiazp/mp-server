@@ -11,17 +11,12 @@ class BaseRepo():
         self.db = db
     
     def get(self, offset: int = 0, limit: int = 0 , *querys: list[tuple]) -> list[T]:
-        if querys != None:
+        if len(querys) > 0:
             return self.db.query(self.model).offset(offset).limit(limit).filter(querys).all()
-
-        return self.db.query(self.model).offset(offset).limit(limit).all()
+        return self.db.query(self.model).offset(offset).limit(limit)
 
     def get_by_id(self, id: int) -> Union[T, None]:
-        return self.db.query(self.model).filter(self.id == id).first()
-    
-    def get_one(self, **querys: Dict[Any, Any]) -> Union[T, None]:
-        breakpoint()
-        return self.db.query(self.model).filter(querys).first()
+        return self.db.query(self.model).filter(self.model.id == id).first()
     
     def create(self, schema: T) -> T:
         self.db.add(schema)
