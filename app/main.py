@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from typing import Union
-from routes import auth
+from app.routes import auth
 
 app = FastAPI()
 app.include_router(auth.router)

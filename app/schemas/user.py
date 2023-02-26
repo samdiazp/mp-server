@@ -1,7 +1,9 @@
-from typing import Union
 from pydantic import BaseModel
+from enum import Enum
 
-
+class Role(Enum):
+    USER="USER"
+    ADMIN="ADMIN"
 class PersonalInformationBase(BaseModel):
     weight: float
     height: float
@@ -24,15 +26,21 @@ class PersonalInformation(PersonalInformationBase):
 
 class UserBase(BaseModel):
     email: str
-
+    role: Role = Role.USER
+    is_active: bool = True
 
 class User(UserBase):
     id: int
-    is_active:bool
-    user_data: PersonalInformation
+    user_data: PersonalInformation = None
 
     class Config:
         orm_mode=True
+        use_enum_values=True
 
 class UserCreate(UserBase):
     password: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
