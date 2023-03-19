@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey, inspect
 from sqlalchemy.orm import relationship
 from app.database import Base
-from .base import BaseModel
+from .base import BaseModel 
 
 class User(Base, BaseModel):
     __tablename__ = "users"
@@ -10,7 +10,7 @@ class User(Base, BaseModel):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role = Column(String)
-    user_data = relationship("PersonalInformation", back_populates="user")
+    user_data = relationship("PersonalInformation", back_populates="user", uselist=False)
 
 
 class PersonalInformation(Base, BaseModel):

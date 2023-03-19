@@ -1,7 +1,11 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from enum import Enum
+from datetime import datetime
 
+class Times(BaseModel):
+    created_at: datetime
+    updated_at: datetime
 class Role(Enum):
     USER="USER"
     ADMIN="ADMIN"
@@ -18,7 +22,7 @@ class PersonalInformationBase(BaseModel):
 class PersonalInformationCreate(PersonalInformationBase):
     user_id: Optional[int] = None
 
-class PersonalInformation(PersonalInformationBase):
+class PersonalInformation(PersonalInformationBase, Times):
     id: int
     user_id: int
 
@@ -30,7 +34,7 @@ class UserBase(BaseModel):
     role: Role = Role.USER
     is_active: bool = True
 
-class User(UserBase):
+class User(UserBase, Times):
     id: int
     user_data: PersonalInformation = None
 

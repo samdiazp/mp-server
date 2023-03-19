@@ -17,9 +17,7 @@ async def login(form: OAuth2PasswordRequestForm = Depends(), db: SessionLocal = 
     if not founded:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
     
-    hashed_password: str = auth.get_hashed_password(form.password)
-
-    if not auth.verify_password(founded.hashed_password, hashed_password):
+    if not auth.verify_password(form.password, founded.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
     
     return {

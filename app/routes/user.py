@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, status, Depends
 from app.schemas.user import PersonalInformationCreate
 from app.schemas.base import BasicResponse
@@ -18,32 +19,24 @@ async def add_personal_information(data: PersonalInformationCreate, user: User =
 
     new_data = personal_repo.create(personal_model)
 
-    return BasicResponse(ok=True, data=new_data.as_dict())
+    return BasicResponse(ok=True, data=new_data)
 
-@router.get('/users', status_code=status.HTTP_200_OK, response_model=BasicResponse)
-async def get_users(skip: int = 0, limit: int = 25, db: SessionLocal = Depends(get_db)) -> BasicResponse:
+@router.get('/users', status_code=status.HTTP_200_OK, response_model=List[User])
+async def get_users(skip: int = 0, limit: int = 25, db: SessionLocal = Depends(get_db)) -> List[User]:
     user_repo = UserRepo(db)
-
-    users = []
-
+    users: List[User] = []
     for user_model in user_repo.get(offset=skip, limit=limit):
         user_dict = user_model.as_dict()
-        if len(user_model.user_data) > 0:
-            user_data = user_model.user_data[0].as_dict()
-            user_dict['user_data'] = user_data
-        users.append(User(**user_dict))
-    return BasicResponse(ok=True, data=users)
+        users.append(User(**user_dict, user_data=user_model.user_data) if user_model.user_data else User(**user_dict))
+    return users
 
-@router.get('/users/{user_id}', status_code=status.HTTP_200_OK, response_model=BasicResponse)
-async def get_users(user_id: int, db: SessionLocal = Depends(get_db)) -> BasicResponse:
+@router.get('/users/{user_id}', status_code=status.HTTP_200_OK, response_model=User)
+async def get_users(user_id: int, db: SessionLocal = Depends(get_db)) -> User:
     user_repo = UserRepo(db)
     user_mdl = user_repo.get_by_id(id=user_id)
 
-    user_dict =user_mdl.as_dict()
+    user_dict = user_mdl.as_dict()
     
-    if len(user_mdl.user_data) > 0:
-        user_dict['user_data'] = user_mdl.user_data[0]
+    user = User(**user_dict) if user_mdl.user_data is None else User(**user_dict, user_data=user_mdl.user_data)
 
-    user = User(**user_dict)
-
-    return BasicResponse(ok=True, data=user)
+    return user
