@@ -31,7 +31,7 @@ async def get_users(skip: int = 0, limit: int = 25, db: SessionLocal = Depends(g
     return users
 
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK, response_model=User)
-async def get_users(user_id: int, db: SessionLocal = Depends(get_db)) -> User:
+async def get_user(user_id: int, db: SessionLocal = Depends(get_db)) -> User:
     user_repo = UserRepo(db)
     user_mdl = user_repo.get_by_id(id=user_id)
 
