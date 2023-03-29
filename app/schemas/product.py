@@ -10,3 +10,6 @@ class ProductCreate(ProductBase):
 
 class Product(ProductBase):
     id: int
+
+    class Config:
+        orm_mode = True

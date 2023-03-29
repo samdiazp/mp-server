@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 from app.schemas.user import PersonalInformationCreate
 from app.schemas.base import BasicResponse
 from app.models.user import PersonalInformation
@@ -26,17 +26,13 @@ async def get_users(skip: int = 0, limit: int = 25, db: SessionLocal = Depends(g
     user_repo = UserRepo(db)
     users: List[User] = []
     for user_model in user_repo.get(offset=skip, limit=limit):
-        user_dict = user_model.as_dict()
-        users.append(User(**user_dict, user_data=user_model.user_data) if user_model.user_data else User(**user_dict))
+        users.append(User.from_orm(user_model))
     return users
 
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK, response_model=User)
 async def get_user(user_id: int, db: SessionLocal = Depends(get_db)) -> User:
     user_repo = UserRepo(db)
     user_mdl = user_repo.get_by_id(id=user_id)
-
-    user_dict = user_mdl.as_dict()
-    
-    user = User(**user_dict) if user_mdl.user_data is None else User(**user_dict, user_data=user_mdl.user_data)
-
-    return user
+    if not user_mdl:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="El usuario no existe")
+    return User.from_orm(user_mdl)

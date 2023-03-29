@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey, inspect
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from app.database import Base
 from .base import BaseModel 
 
@@ -10,7 +10,6 @@ class User(Base, BaseModel):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role = Column(String)
-    user_data = relationship("PersonalInformation", back_populates="user", uselist=False)
 
 
 class PersonalInformation(Base, BaseModel):
@@ -24,4 +23,4 @@ class PersonalInformation(Base, BaseModel):
     allergies = Column(String)
     pathologies = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    user = relationship("User", back_populates="user_data")
+    user = relationship("User", backref=backref("user_data", uselist=False))

@@ -1,6 +1,6 @@
-from typing import Any
+from typing import Any, Optional
 from pydantic import BaseModel
 
 class BasicResponse(BaseModel):
     ok: bool
-    data: Any
+    data: Optional[Any] = None

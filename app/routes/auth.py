@@ -2,7 +2,7 @@ from typing import Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from app.repositories import users
-from app.schemas import user as user_sch
+from app.schemas import user as user_sch, base
 from app.database import SessionLocal, get_db
 from app.models import user
 from app.utils import auth 
@@ -41,4 +41,4 @@ async def signup(form: user_sch.UserCreate, db: SessionLocal = Depends(get_db)) 
     hashed_password: str = auth.get_hashed_password(form.password)
     new_user_model = user.User(email=form.email, hashed_password=hashed_password, role="USER")
     new_user = user_repo.create(new_user_model)
-    return user_sch.User(**new_user.as_dict())
+    return user_sch.User.from_orm(new_user)

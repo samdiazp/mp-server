@@ -34,7 +34,6 @@ def get_hashed_password(password: str) -> str:
 
 
 def verify_password(password: str, hashed_pass: str) -> bool:
-    breakpoint()
     return password_context.verify(password, hashed_pass)
 
 
@@ -87,6 +86,6 @@ async def get_me(token: str = Depends(reuseable_oauth), db: SessionLocal = Depen
             detail="Usuario no existe",
         )
     
-    return UserSCH(**user.as_dict())
+    return UserSCH.from_orm(user)
 
     

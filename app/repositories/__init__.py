@@ -1,10 +1,11 @@
-from typing import TypeVar, Union
+from typing import TypeVar, Union, Any, Dict
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 T = TypeVar("T")
 
 
-class BaseRepo():
+class BaseRepo:
 
     def __init__(self, db: Session, model: T) -> None:
         self.model = model
@@ -24,14 +25,13 @@ class BaseRepo():
         self.db.refresh(schema)
         return schema
     
-    def update(self, id: int, *values: list[tuple]) -> T:
-        new_mod = self.model.update().where(self.model.id ==  id).values(values)
-        self.db.add(new_mod)
+    def update(self, mod: T, **values: dict) -> T:
+        for key in values:
+           setattr(mod, key, values[key])
         self.db.commit()
-        self.db.refresh(new_mod)
-        return new_mod
+        self.db.refresh(mod)
+        return mod
     
     def delete(self, id: int) -> None:
-        deleted = self.model.delete().where(self.model.id == id)
-        self.db.add(deleted)
+        self.db.query(self.model).filter(self.model.id == id).delete()
         self.db.commit()
