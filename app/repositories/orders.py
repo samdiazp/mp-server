@@ -1,7 +1,7 @@
 from typing import List
 from . import BaseRepo
 from sqlalchemy.orm import Session
-from app.models.order import Order, OrderProducts
+from models.order import Order, OrderProducts
 
 
 class OrderRepo(BaseRepo):

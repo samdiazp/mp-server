@@ -1,6 +1,6 @@
 from . import BaseRepo
 from sqlalchemy.orm import Session
-from app.models.user import User, PersonalInformation
+from models.user import User, PersonalInformation
 
 class UserRepo(BaseRepo):
 

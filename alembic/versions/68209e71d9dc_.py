@@ -31,6 +31,7 @@ def upgrade() -> None:
         sa.Column("total", sa.Float),
         sa.Column("status", sa.Integer),
         sa.Column("user_id", sa.Integer, sa.ForeignKey("users.id")),
+        sa.Column("sites_id", sa.Integer, sa.ForeignKey("sites.id")),
         sa.Column("date", sa.DateTime, nullable=False),
         sa.Column('created_at', sa.DateTime, default=datetime.now()),
         sa.Column('updated_at', sa.DateTime)

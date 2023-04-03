@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.database import get_db, SessionLocal
-from app.utils import auth
-from app.models import order as order_model, user as user_model
-from app.schemas import order, user, product 
-from app.schemas.base import  BasicResponse
-from app.repositories import orders, products
+from database import get_db, SessionLocal
+from utils import auth
+from models import order as order_model, user as user_model
+from schemas import order, user, product 
+from schemas.base import  BasicResponse
+from repositories import orders, products
 
 router = APIRouter()
 

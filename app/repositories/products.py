@@ -1,5 +1,5 @@
 from . import BaseRepo
-from ..models.order import Product
+from models.order import Product
 from sqlalchemy.orm import Session
 
 class ProductRepo(BaseRepo):

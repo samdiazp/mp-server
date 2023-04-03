@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, HTTPException
-from app.schemas.user import PersonalInformationCreate
-from app.schemas.base import BasicResponse
-from app.models.user import PersonalInformation
-from app.repositories.users import PersonalInfoRepo, UserRepo
-from app.schemas.user import User, PersonalInformation as PersonalInformationSCH
-from app.database import get_db, SessionLocal
-from app.utils.auth import get_me
+from schemas.user import PersonalInformationCreate
+from schemas.base import BasicResponse
+from models.user import PersonalInformation
+from repositories.users import PersonalInfoRepo, UserRepo
+from schemas.user import User, PersonalInformation as PersonalInformationSCH
+from database import get_db, SessionLocal
+from utils.auth import get_me
 
 router = APIRouter()
 
