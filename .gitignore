@@ -43,3 +43,7 @@ coverage.xml
 *.pot
 
 # Sphinx documentation
+
+
+# node 
+node_modules/
