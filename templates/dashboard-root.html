@@ -1,18 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js" integrity="sha512-FSS62yxqCRMCtm1J+ddRwX8DuCRVt/WMpihCo06P+Je5AG4CV9yoLX53zHaOB5w/eZdG7d/QAyUEJTnHZHrWKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js"
+        integrity="sha512-FSS62yxqCRMCtm1J+ddRwX8DuCRVt/WMpihCo06P+Je5AG4CV9yoLX53zHaOB5w/eZdG7d/QAyUEJTnHZHrWKg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/app.css')}}">
-    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/dashboard.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title> {{ title }} - Marily Palmar</title>
 </head>
-<body>
-    <aside></aside>
-    <main>
-        <h1 class="text-xl text-red-200">Dashboard</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quibusdam.</p>
+
+<body class="flex h-screen bg-gray-100">
+
+    <!-- Sidebar -->
+    <aside class="bg-gradient-to-r from-blue-400 to-blue-800 text-slate-100 h-full flex flex-col">
+        <div class="p-4">
+            <h1 class="text-2xl font-semibold text-left">MP</h1>
+        </div>
+        <nav class="flex flex-col flex-grow">
+            <ul class="space-y-2 flex flex-col flex-1">
+                <li>
+                    <a href="#"
+                        class="flex items-center py-2 px-4 transition duration-300 hover:bg-light-blue-400 hover:text-white rounded">
+                        <i class="fas fa-home mr-2"></i>
+                        <span class="text-label">Mis ordenes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center py-2 px-4 transition duration-300 hover:bg-light-blue-400 hover:text-white rounded">
+                        <i class="fas fa-home mr-2"></i>
+                        <span class="text-label">Usuarios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center py-2 px-4 transition duration-300 hover:bg-light-blue-400 hover:text-white rounded">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span class="text-label">Productos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center py-2 px-4 transition duration-300 hover:bg-light-blue-400 hover:text-white rounded">
+                        <i class="fas fa-cogs mr-2"></i>
+                        <span class="text-label">Ordenes</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="flex items-center pb-3">
+                <a href="#"
+                    class="flex items-center py-4 px-4 transition duration-300 hover:bg-light-blue-400 hover:text-white rounded">
+                    <i class="fas fa-cogs mr-2"></i>
+                    <span class="text-label">Cerrar Sesi&oacute;n</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4">
+        <!-- Your content goes here -->
+        <h1 class="text-3xl font-semibold">{{ title }}</h1>
+        <h2>The user is {{ user.user_data.name }}</h2>
+        {% block content %} {% endblock %}
     </main>
-    <footer></footer>
+
 </body>
+
 </html>

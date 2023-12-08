@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import FastAPI, Request
-from routes import auth, order, user, products, dashboard
+from routes.api import auth, order, user, products
+from routes import dashboard
+from routes import auth as auth_pages
 from fastapi.staticfiles import StaticFiles
 from utils.templating import templates
 
@@ -14,6 +16,7 @@ app.include_router(user.router, tags=['users'], prefix=PREFIX_API)
 app.include_router(order.router, tags=['orders'], prefix=PREFIX_API)
 app.include_router(products.router, tags=['products'], prefix=PREFIX_API)
 app.include_router(dashboard.router, tags=['dashboard'], prefix='/dashboard')
+app.include_router(auth_pages.router, tags=['auth'], prefix='/auth')
 
 @app.get("/")
 async def root(request: Request):

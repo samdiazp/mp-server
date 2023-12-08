@@ -6,7 +6,7 @@ from jose import jwt
 from repositories.users import UserRepo
 from schemas.user import User as UserSCH
 from pydantic import ValidationError, BaseModel
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, Request, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from database import get_db, SessionLocal
 
@@ -21,8 +21,7 @@ JWT_REFRESH_SECRET_KEY = os.environ.get(
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-reuseable_oauth = OAuth2PasswordBearer(
-    tokenUrl="/auth/login", scheme_name="JWT")
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class TokenPayload(BaseModel):
@@ -70,7 +69,6 @@ async def get_me(
     try:
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
         token_payload = TokenPayload(**payload)
-
         if datetime.fromtimestamp(token_payload.exp) < datetime.now():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -91,6 +89,40 @@ async def get_me(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Usuario no existe",
+        )
+
+    return UserSCH.from_orm(user)
+
+async def get_active_user(request: Request, db: SessionLocal = Depends(get_db)) -> UserSCH:
+    token = request.cookies.get("token")
+    if token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No autorizado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    try:
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        token_payload = TokenPayload(**payload)
+        if datetime.fromtimestamp(token_payload.exp) < datetime.now():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expirado",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except (jwt.JWTError, ValidationError):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No se pudo validar las credenciales",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user_repo = UserRepo(db)
+    user = user_repo.get_by_email(token_payload.sub)
+
+    if user is None or user.is_active is False:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
         )
 
     return UserSCH.from_orm(user)
